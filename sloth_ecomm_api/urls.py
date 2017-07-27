@@ -15,11 +15,17 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from rest_framework import routers
-from quickstart import views
+# from quickstart import views
+from apps.products import views as ProductViews
+from apps.users import views as UserViews
+from apps.cart import views as CartViews
 
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
+router.register(r'users', UserViews.UserViewSet)
+# router.register(r'groups', views.GroupViewSet)
+router.register(r'products', ProductViews.ProductViewSet)
+router.register(r'cart', CartViews.CartViewSet)
+
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
