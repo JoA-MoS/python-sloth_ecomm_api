@@ -14,22 +14,27 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
-from rest_framework import routers
-# from quickstart import views
+# from rest_framework import routers
+from rest_framework_nested import routers
+
 from apps.products import views as ProductViews
 from apps.users import views as UserViews
 from apps.cart import views as CartViews
 
-router = routers.DefaultRouter()
+router = routers.SimpleRouter()
 router.register(r'users', UserViews.UserViewSet)
-# router.register(r'groups', views.GroupViewSet)
 router.register(r'products', ProductViews.ProductViewSet)
-router.register(r'cart', CartViews.CartViewSet)
+
+users_router = routers.NestedSimpleRouter(router, r'users', lookup='user')
+users_router.register(r'cartitems', CartViews.CartViewSet)
+
+# router.register(r'cart', CartViews.CartViewSet)
 
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'^', include(users_router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
